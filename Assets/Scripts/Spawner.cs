@@ -25,7 +25,7 @@ public class Spawner : MonoBehaviour {
 		}
 		if (useSpawnPoint != null){
 			Vector3 pos = useSpawnPoint.transform.position;
-			pos.y = transform.position.y;
+			pos.y += 0.2f;
 			transform.position = pos;
 			transform.rotation = useSpawnPoint.transform.rotation;
 		}

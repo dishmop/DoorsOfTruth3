@@ -8,6 +8,7 @@ public class GameMode : MonoBehaviour {
 	public static GameMode singleton = null;
 	public GameObject deadPanelGO;
 	public string nextLevelName;
+	public string reloadLevelName = "Playpen";
 	
 	public enum State{
 		kStartingLevel,
@@ -115,7 +116,7 @@ public class GameMode : MonoBehaviour {
 		}
 		if (state == State.kDead){
 			if (Input.GetKeyDown(KeyCode.E)){
-				Application.LoadLevel("Playpen");
+				Application.LoadLevel(reloadLevelName);
 				state = State.kPlaying;
 			}
 		}

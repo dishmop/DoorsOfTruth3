@@ -24,10 +24,11 @@ public class TimerTrigger : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (hasStarted){
-		//	Debug.Log(name + ": Time elapsed = " + (Time.time - startTime));
+			Debug.Log(name + ": Time elapsed = " + (Time.time - startTime));
 		}
 		if (hasStarted && Time.time > startTime + timerDelay){
 			triggerFunc.Invoke();
+			hasStarted = false;
 		}
 	
 	}
