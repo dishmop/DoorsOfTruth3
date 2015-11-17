@@ -11,9 +11,13 @@ public class TVHinge : MonoBehaviour {
 	};
 	public State state = State.kUp;
 	
-	float theta = 0;
+	
 	float triggerTime;
 	float period = 1.5f;
+	
+	public GameObject targetGO;
+	Quaternion targetRot;
+	Quaternion startRot;
 	
 	public void GoUp(){
 		if (state  == State.kDown || state == State.kGoingDown){
@@ -31,6 +35,8 @@ public class TVHinge : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		startRot = transform.localRotation;
+		targetRot = targetGO.transform.localRotation;
 	
 	}
 	
@@ -41,37 +47,33 @@ public class TVHinge : MonoBehaviour {
 		
 		// Value from 0 to 1
 		float val = 0.5f - 0.5f * Mathf.Cos(age * Mathf.PI / period);
-		
+		Quaternion useRot = Quaternion.identity;
 		switch (state){
 			case State.kUp:{
-				theta = 0;
+				useRot = startRot;
 				break;
 			}
 			case State.kDown:{
-				theta = -90;
+				useRot = targetRot;
 				break;
 			}
 			case State.kGoingUp:{
-				theta = Mathf.Lerp(-90, 0, val);
+				useRot = Quaternion.Slerp(targetRot, startRot, val);
 				if (age > period){
 					state = State.kUp;
 				}
 				break;
 			}			
 			case State.kGoingDown:{
-				theta = Mathf.Lerp(0, -90, val);
+				useRot = Quaternion.Slerp(startRot, targetRot, val);
 				if (age > period){
 					state = State.kDown;
 				}
 				break;
 			}			
 		}
-		
-		Vector3 rot = transform.localRotation.eulerAngles;
-		rot.x = theta;
-		transform.localRotation = Quaternion.Euler(rot);
-		
-		
+		transform.localRotation = useRot;
 	
 	}
+	
 }

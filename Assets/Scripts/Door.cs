@@ -20,6 +20,7 @@ public class Door : MonoBehaviour {
 	}
 	public float angle = 0;
 	public float angularSpeed = 90;
+	public bool locked = false;
 	
 	public State state = State.kClosed;
 	public bool isInTrigger = false;
@@ -51,7 +52,7 @@ public class Door : MonoBehaviour {
 		switch (state){	
 			case State.kClosed:
 				angle = 0;
-				if (isInTrigger && Input.GetKeyDown(KeyCode.E)){
+				if (isInTrigger && Input.GetKeyDown(KeyCode.E) && !locked){
 					state = State.kOpening;
 					openSound.Play();
 					closeSound.Stop();
@@ -148,7 +149,7 @@ public class Door : MonoBehaviour {
 		
 		transform.FindChild("Hinge").localRotation = Quaternion.Euler(0, -angle, 0);
 		
-		canInteract = isInTrigger && IsLookingAt();
+		canInteract = isInTrigger && IsLookingAt() && !locked;
 		if (isInTrigger){	
 			if (canInteract){	
 				if ((state == State.kClosed || state == State.kClosing)){
@@ -163,6 +164,10 @@ public class Door : MonoBehaviour {
 			}
 		}
 	
+	}
+	
+	public void Unlock(){
+		locked = false;
 	}
 	
 	public void CloseDoor(){
