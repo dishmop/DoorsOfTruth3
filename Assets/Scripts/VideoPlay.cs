@@ -12,12 +12,16 @@ public class VideoPlay : MonoBehaviour {
 	public GameObject colliderGO;
 	public UnityEvent onVideoFinish;
 	public UnityEvent onInteract;
+	public UnityEvent onEnterInteractionZone;
+	public UnityEvent onExitInteractionZone;
+	public GameObject slaveTVGO;
 	public bool isInteractable;
 	public string interactionText = "Press [E] for attention";
 	public GameObject smashAudioGO;
 	bool smashDone;
 	bool canInteract = false;
 	bool isPlaying = false;
+	bool isInInteractionZone = false;
 
 	
 	
@@ -28,6 +32,10 @@ public class VideoPlay : MonoBehaviour {
 		if (isInTrigger){
 			canInteract = IsLookingAt();
 			if (canInteract && isInteractable){
+				if(!isInInteractionZone){
+					onEnterInteractionZone.Invoke();
+				}
+				isInInteractionZone = true;
 				HUD.singleton.SetLowerTextMessage(interactionText);
 				if (Input.GetKeyDown(KeyCode.E)){
 					onInteract.Invoke();
@@ -49,8 +57,19 @@ public class VideoPlay : MonoBehaviour {
 				}
 			}
 			else{
+				if(isInInteractionZone){
+					onExitInteractionZone.Invoke();
+				}
+				isInInteractionZone = false;
+				
 				HUD.singleton.ClearLowerTextMessage();
 			}
+		}
+		else{
+			if(isInInteractionZone){
+				onExitInteractionZone.Invoke();
+			}
+			isInInteractionZone = false;
 		}
 		
 		if (isPlaying){
@@ -103,9 +122,9 @@ public class VideoPlay : MonoBehaviour {
 	}
 	
 	// Can't be called from an event
-	void PlayVideo(int index, bool loop){
+	public void PlayVideo(int index, bool loop){
 	
-		StopPlayback();
+	   StopPlayback();
 
 		pictureGO.transform.GetComponent<Renderer>().material.SetTexture("_EmissionMap", videos[index]);
 		MovieTexture emissiveVideo = pictureGO.transform.GetComponent<Renderer>().material.GetTexture("_EmissionMap") as MovieTexture;
@@ -118,6 +137,11 @@ public class VideoPlay : MonoBehaviour {
 		
 		isPlaying = true;
 	//	Debug.Log ("PlayVideo");
+	
+		if (slaveTVGO != null){
+			slaveTVGO.GetComponent<VideoPlay>().PlayVideo(index, loop);			    
+		}
+		    
 		
 	}
 	
@@ -145,6 +169,9 @@ public class VideoPlay : MonoBehaviour {
 			oldSource.Stop ();
 		}
 		isPlaying = false;
+		if (slaveTVGO != null){
+			slaveTVGO.GetComponent<VideoPlay>().StopPlayback();			    
+		}
 		
 	}
 }
