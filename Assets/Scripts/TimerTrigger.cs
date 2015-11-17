@@ -9,6 +9,7 @@ public class TimerTrigger : MonoBehaviour {
 	bool hasStarted = false;
 
 	public void StartTimer(float delay){
+		if (hasStarted) return;
 		startTime = Time.time;
 		timerDelay = delay;
 		hasStarted = true;

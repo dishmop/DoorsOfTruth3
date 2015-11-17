@@ -87,7 +87,9 @@ public class VideoPlay : MonoBehaviour {
 	
 	void TestSmash(){
 		if (!smashDone && MathUtils.FP.Feq(transform.rotation.eulerAngles.x, 270, 1)){
-			smashAudioGO.GetComponent<AudioSource>().Play();
+			if (smashAudioGO != null){
+				smashAudioGO.GetComponent<AudioSource>().Play();
+			}
 			smashDone = true;
 		}
 	}

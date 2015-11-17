@@ -13,10 +13,13 @@ ModelImporter:
     400004: //RootNode
     2300000: Box_MeshPart0
     2300002: Box_MeshPart1
+    2300004: //RootNode
     3300000: Box_MeshPart0
     3300002: Box_MeshPart1
+    3300004: //RootNode
     4300000: Box_MeshPart0
     4300002: Box_MeshPart1
+    4300004: Box
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -47,7 +50,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
@@ -60,7 +63,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0

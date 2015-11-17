@@ -165,6 +165,11 @@ public class Door : MonoBehaviour {
 	
 	}
 	
+	public void CloseDoor(){
+		state = State.kClosing;
+		closeSound.Play();
+	}
+	
 	bool IsLookingAt(){
 		Vector3 fw = new Vector3(0, 0, 1);
 		Vector3 playerFW = colliderGO.transform.TransformDirection(fw);
