@@ -59,10 +59,10 @@ public class VideoPlay : MonoBehaviour {
 			else{
 				if(isInInteractionZone){
 					onExitInteractionZone.Invoke();
+					HUD.singleton.ClearLowerTextMessage();
 				}
 				isInInteractionZone = false;
 				
-				HUD.singleton.ClearLowerTextMessage();
 			}
 		}
 		else{

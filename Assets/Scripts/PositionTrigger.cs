@@ -19,7 +19,9 @@ public class PositionTrigger : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter(Collider collider){
-		triggerHandler.Invoke();
+		if (collider.name == "FPSController"){
+			triggerHandler.Invoke();
+		}
 		
 	}
 }

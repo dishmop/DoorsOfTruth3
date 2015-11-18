@@ -127,7 +127,7 @@ public class Door : MonoBehaviour {
 				if (finishPosGO != null){
 					
 				}
-				else if (isInTrigger && Input.GetMouseButtonDown(0)){
+				else if (isInTrigger  && Input.GetKeyDown(KeyCode.E) && !locked){
 					state = State.kClosing;
 					closeSound.Play();
 					openSound.Stop();
@@ -135,7 +135,7 @@ public class Door : MonoBehaviour {
 				break;
 			case State.kClosing:
 				angle -= angularSpeed * Time.fixedDeltaTime;
-				if (isInTrigger && Input.GetMouseButtonDown(0)){
+				if (isInTrigger  && Input.GetKeyDown(KeyCode.E) && !locked){
 					state = State.kOpening;
 					openSound.Play();
 					closeSound.Stop();

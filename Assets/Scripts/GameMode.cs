@@ -32,10 +32,12 @@ public class GameMode : MonoBehaviour {
 	}
 
 	public void OpenEyes(){
+		if (state == State.kPlaying) return;
 		state = State.kOpenEyes;
 		shutEyeFrac = 1;
 	}
-		// Use this for initialization
+	
+	// Use this for initialization
 	void Start () {
 		if (state != State.kUI){
 			Cursor.lockState = CursorLockMode.Locked;
@@ -100,6 +102,7 @@ public class GameMode : MonoBehaviour {
 			Camera.main.gameObject.transform.FindChild("EyeLids").GetComponent<Renderer>().material.color = new Color(0, 0, 0, shutEyeFrac);
 			if (shutEyeFrac < 0){
 				Camera.main.gameObject.transform.FindChild("EyeLids").gameObject.SetActive(false);
+				state = State.kPlaying;
 			}
 			
 		}		

@@ -11,12 +11,24 @@ public class FontEnd : MonoBehaviour {
 	bool triggerStartGame = false;
 	float duration = 1;
 	float startTime = 0;
-	public string levelName;
-	
+	public string levelName1;
+	public string levelName2;
+	string useLevelName;
+		
 	public void StartGame(){
 		triggerStartGame = true;
 		startTime = Time.time;
 		GetComponent<AudioSource>().Play ();
+		useLevelName = levelName1;
+		SpawnManager.ClearSpawnPos();
+	}
+	
+	public void StartLevel2(){
+		triggerStartGame = true;
+		startTime = Time.time;
+		GetComponent<AudioSource>().Play ();
+		useLevelName = levelName2;
+		SpawnManager.ClearSpawnPos();
 	}
 
 	
@@ -30,7 +42,7 @@ public class FontEnd : MonoBehaviour {
 			
 		}
 		if (fade > 0.99f){
-			Application.LoadLevel(levelName);
+			Application.LoadLevel(useLevelName);
 			gameStartTime = Time.time;
 			//Debug.Log("startGame");
 			GoogleAnalytics.Client.SendEventHit("gameFlow", "startGame");	
