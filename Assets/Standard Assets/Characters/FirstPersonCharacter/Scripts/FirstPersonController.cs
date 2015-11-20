@@ -42,6 +42,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
         
+		public bool lockRotation =false;
+        
+        public void EnableLockRotation(bool enable){
+			lockRotation = enable;
+        }
+        
 		public float GetRunSpeed(){
 			return m_RunSpeed;
 		}
@@ -260,7 +266,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+	        if (!lockRotation){
+	            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            }
         }
 
 
