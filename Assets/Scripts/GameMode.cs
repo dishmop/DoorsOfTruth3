@@ -110,6 +110,10 @@ public class GameMode : MonoBehaviour {
 			deadPanelGO.SetActive(false);
 		}
 		if (state == State.kFadeout){
+			if (Input.GetKeyDown(KeyCode.E)){
+				Application.LoadLevel(reloadLevelName);
+				state = State.kPlaying;
+			}
 			deadPanelGO.SetActive(true);
 			float alpha = Mathf.Lerp (0, 1, (Time.time - fadeStart) / fadeDuration);
 			deadPanelGO.GetComponent<DeadPanel>().alpha =alpha;

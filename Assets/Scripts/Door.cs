@@ -34,6 +34,7 @@ public class Door : MonoBehaviour {
 	float rotTimeToTake = 1;
 	float walkSpeed = 0;
 	float rotTimeStart = 0;
+	bool ePressed = false;
 	
 	GameObject colliderGO;
 	GameObject playerGO;
@@ -46,13 +47,20 @@ public class Door : MonoBehaviour {
 		startPosGO.GetComponent<Renderer>().enabled = false;
 	
 	}
+
+	void Update(){
+		if (Input.GetKeyDown (KeyCode.E)) {
+			ePressed = true;
+		}
+	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		switch (state){	
 			case State.kClosed:
 				angle = 0;
-				if (isInTrigger && Input.GetKeyDown(KeyCode.E) && !locked){
+				if (isInTrigger && ePressed && !locked){
+					Debug.Log ("Open door");
 					state = State.kOpening;
 					openSound.Play();
 					closeSound.Stop();
@@ -127,7 +135,7 @@ public class Door : MonoBehaviour {
 				if (finishPosGO != null){
 					
 				}
-				else if (isInTrigger  && Input.GetKeyDown(KeyCode.E) && !locked){
+				else if (isInTrigger  && ePressed && !locked){
 					state = State.kClosing;
 					closeSound.Play();
 					openSound.Stop();
@@ -135,7 +143,7 @@ public class Door : MonoBehaviour {
 				break;
 			case State.kClosing:
 				angle -= angularSpeed * Time.fixedDeltaTime;
-				if (isInTrigger  && Input.GetKeyDown(KeyCode.E) && !locked){
+				if (isInTrigger  && ePressed && !locked){
 					state = State.kOpening;
 					openSound.Play();
 					closeSound.Stop();
@@ -163,6 +171,7 @@ public class Door : MonoBehaviour {
 				HUD.singleton.ClearLowerTextMessage();
 			}
 		}
+		ePressed = false;
 	
 	}
 	

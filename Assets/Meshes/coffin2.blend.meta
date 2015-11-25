@@ -1,25 +1,39 @@
 fileFormatVersion: 2
-guid: 81e3f07eb943c4a178a92cd2befe5637
-timeCreated: 1447261116
-licenseType: Pro
+guid: a5b006c19270d4ab598ecb42e987770a
+timeCreated: 1448458132
+licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Box_MeshPart0
-    100002: Box_MeshPart1
-    100004: //RootNode
-    400000: Box_MeshPart0
-    400002: Box_MeshPart1
-    400004: //RootNode
-    2300000: Box_MeshPart0
-    2300002: Box_MeshPart1
-    2300004: //RootNode
-    3300000: Box_MeshPart0
-    3300002: Box_MeshPart1
-    3300004: //RootNode
-    4300000: Box_MeshPart0
-    4300002: Box_MeshPart1
-    4300004: Box
+    100000: Box
+    100002: //RootNode
+    100004: Lid
+    100006: Ornament
+    100008: Ornament_MeshPart0
+    100010: Ornament_MeshPart1
+    100012: Tape
+    400000: Box
+    400002: //RootNode
+    400004: Lid
+    400006: Ornament
+    400008: Ornament_MeshPart0
+    400010: Ornament_MeshPart1
+    400012: Tape
+    2300000: Box
+    2300002: Lid
+    2300004: Ornament_MeshPart0
+    2300006: Ornament_MeshPart1
+    2300008: Tape
+    3300000: Box
+    3300002: Lid
+    3300004: Ornament_MeshPart0
+    3300006: Ornament_MeshPart1
+    3300008: Tape
+    4300000: Box
+    4300002: Lid
+    4300004: Ornament_MeshPart0
+    4300006: Ornament_MeshPart1
+    4300008: Tape
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -50,7 +64,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
@@ -63,7 +77,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
