@@ -56,7 +56,7 @@ public class SetupResolution : MonoBehaviour {
 			ResetTimer();
 		}
 		
-		if (Time.time > timerStart + sustainedBadFPSDuration && numReductions < maxNumReductions){
+		if (Time.time > timerStart + sustainedBadFPSDuration && numReductions < maxNumReductions || resolutions[resIndex].height > 1080){
 			ReduceResolution();
 			
 		}
@@ -75,7 +75,7 @@ public class SetupResolution : MonoBehaviour {
 		ResetTimer();
 		int newResIndex = GetNextResDown();
 		if (newResIndex != resIndex){
-			Debug.Log ("Reducing resolution to " + resolutions[newResIndex].width + "x" + resolutions[newResIndex].height + " due to low framerate");
+			Debug.Log ("Reducing resolution to " + resolutions[newResIndex].width + "x" + resolutions[newResIndex].height + " due to low framerate or lack of memory");
 			
 			GoogleAnalytics.Client.SendTimedEventHit("reduceResolution", Application.loadedLevelName, (resolutions[newResIndex].width + "x" + resolutions[newResIndex].height), Time.fixedTime);
 						
@@ -107,7 +107,7 @@ public class SetupResolution : MonoBehaviour {
 	void OnGUI(){
 		if (Time.time < triggerStartTime + triggerDuration){
 			GUI.skin.label.fontSize = 20;
-			string message = "Reducing resolution to " + resolutions[resIndex].width + "x" + resolutions[resIndex].height + " to try and improve framerate";
+			string message = "Reducing resolution to " + resolutions[resIndex].width + "x" + resolutions[resIndex].height + " to try and improve framerate or free memory";
 			Vector2 textSize = GUI.skin.label.CalcSize(new GUIContent(message));
 			float widthRemaining = Screen.width - textSize.x;
 			GUI.Label(new Rect(widthRemaining * 0.5f, 20, textSize.x, 50), message);
