@@ -19,12 +19,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Quaternion m_CharacterTargetRot;
         private Quaternion m_CameraTargetRot;
 
+		public void ResetTarget(Transform character, Transform camera) {
+			m_CharacterTargetRot = character.localRotation;
+			m_CameraTargetRot = camera.localRotation;
+
+		}
 
         public void Init(Transform character, Transform camera)
         {
-            m_CharacterTargetRot = character.localRotation;
-            m_CameraTargetRot = camera.localRotation;
-        }
+			ResetTarget (character,camera);
+		}
 
 
         public void LookRotation(Transform character, Transform camera)
