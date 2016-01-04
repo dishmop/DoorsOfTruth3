@@ -6,6 +6,8 @@ public class Variable : Expression
 	public string Symbol;
 	Character character;
 
+	public Color colour;
+
 	new public void Start ()
 	{
 		base.Start ();
@@ -18,6 +20,7 @@ public class Variable : Expression
 			character.transform.SetParent (transform.parent,false);	
 			character.transform.position = transform.position;
 			character.character = Symbol;
+			character.color = colour;
 		}
 
 		character.transform.localPosition = new Vector3(Positionx,Positiony,0)+ new Vector3 ((ShowingSign ? Equations.SignWidth : 0),0,0);

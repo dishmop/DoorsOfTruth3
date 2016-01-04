@@ -14,12 +14,16 @@ public class Eraser : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (mouseOver && transform.position.y <= startpos.y) {
-			GetComponent<Rigidbody> ().AddForce (new Vector3 (0, 0.1f, 0), ForceMode.VelocityChange);
-		}
-
 		if (mouseOver) {
-			GetComponent<Rigidbody> ().AddForce (-Physics.gravity, ForceMode.Acceleration);
+			GetComponent<Rigidbody> ().isKinematic = true;
+
+			transform.position = Vector3.Lerp(transform.position, startpos, 0.6f);
+
+			GetComponent<BoxCollider>().size = new Vector3(1,5,1);
+
+		} else {
+			GetComponent<Rigidbody> ().isKinematic = false;
+			GetComponent<BoxCollider>().size = new Vector3(1,1,1);
 
 		}
 	}

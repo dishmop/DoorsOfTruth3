@@ -91,6 +91,8 @@ public class Equations : MonoBehaviour
 	Color textColour;
 	[SerializeField]
 	Color backgroundColour;
+
+	public string ArrangedFor; // which symbol is on LHS/RHS
 	
 	public void Awake ()
 	{
@@ -161,6 +163,16 @@ public class Equations : MonoBehaviour
 
 		// Work out change in mouse position
 		MouseDelta = MousePos - OldMousePos;
+
+		// LHS has precedence over RHS (in practice there should never be a conflict)
+		if (LHS.Children [0].GetType () == typeof(Variable)) {
+			ArrangedFor = ((Variable)LHS.Children[0]).Symbol;
+		} else if (RHS.Children [0].GetType () == typeof(Variable)) {
+			ArrangedFor = ((Variable)RHS.Children[0]).Symbol;
+		} else {
+			ArrangedFor = null;
+		}
+
 	}
 
 	public void Undo ()
