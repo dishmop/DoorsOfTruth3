@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class interactwithequations : MonoBehaviour {
+public class BlackBoard : MonoBehaviour {
 	public bool isInTrigger = false;
 	bool isInInteractionZone = false;	
 	public bool canInteract = false;
 	GameObject colliderGO;
+
+	public GameObject chalkGO;
 	public GameObject interactPosGO;
 
 	public bool isInteractable;
@@ -19,6 +21,7 @@ public class interactwithequations : MonoBehaviour {
 
 	void Start() {
 		interactPosGO.GetComponent<Renderer> ().enabled = false;
+		chalkGO.SetActive (false);
 	}
 
 	float LookAtAngle() {
@@ -103,11 +106,13 @@ public class interactwithequations : MonoBehaviour {
 
 					var controller = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>();
 					interacting = !interacting;
-					Cursor.visible = interacting;
+					//Cursor.visible = interacting;
 					Cursor.lockState = interacting?CursorLockMode.None:CursorLockMode.Locked;
 
 					controller.lockRotation = interacting;
 					controller.lockPosition = interacting;
+
+					chalkGO.SetActive(interacting);
 
 				}
 			}
@@ -130,14 +135,18 @@ public class interactwithequations : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider){
-		colliderGO = collider.gameObject;
-		isInTrigger = true;
+		if (collider.gameObject.GetComponentInChildren<UnityStandardAssets.Characters.FirstPerson.FirstPersonController> () != null) {
+			colliderGO = collider.gameObject;
+			isInTrigger = true;
+		}
 	}
 	
 	void OnTriggerExit(Collider collider){
-		colliderGO = null;
-		isInTrigger = false;
-		HUD.singleton.ClearLowerTextMessage();
+		if (collider.gameObject.GetComponentInChildren<UnityStandardAssets.Characters.FirstPerson.FirstPersonController> () != null) {
+			colliderGO = null;
+			isInTrigger = false;
+			HUD.singleton.ClearLowerTextMessage ();
+		}
 	}
 
 }

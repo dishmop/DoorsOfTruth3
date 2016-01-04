@@ -13,6 +13,7 @@ public class FontEnd : MonoBehaviour {
 	float startTime = 0;
 	public string levelName1;
 	public string levelName2;
+	public string levelName3;
 	string useLevelName;
 		
 	public void StartGame(){
@@ -28,6 +29,14 @@ public class FontEnd : MonoBehaviour {
 		startTime = Time.time;
 		GetComponent<AudioSource>().Play ();
 		useLevelName = levelName2;
+		SpawnManager.ClearSpawnPos();
+	}
+
+	public void StartLevel3(){
+		triggerStartGame = true;
+		startTime = Time.time;
+		GetComponent<AudioSource>().Play ();
+		useLevelName = levelName3;
 		SpawnManager.ClearSpawnPos();
 	}
 
