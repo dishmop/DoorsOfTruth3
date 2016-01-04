@@ -3,10 +3,17 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
 	public string character = "";
-	public Color color = Color.black;
+	Color color = Color.cyan;
+	public Equations equations;
 
-	void Awake() {
-		color = Equations.DefaultTextColour;
+	public void SetColour (Color colour) {
+		color = colour;
+	}
+
+	void Start() {
+		if (color == Color.cyan) {
+			color = equations.defaultTextColour;
+		}
 	}
 
 	public void LateUpdate() {

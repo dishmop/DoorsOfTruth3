@@ -4,8 +4,10 @@ using System.Collections;
 public class Reciprocal : MonoBehaviour {
 	public Expression expression;
 
+	public Equations equations;
+
 	void Start(){
-		GetComponent<UnityEngine.UI.RawImage> ().color = Equations.DefaultTextColour;
+		GetComponent<UnityEngine.UI.RawImage> ().color = equations.defaultTextColour;
 
 	}
 

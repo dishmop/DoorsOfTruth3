@@ -7,23 +7,25 @@ public class Bracket : MonoBehaviour {
 	GameObject left;
 	GameObject right;
 
+	public Equations equations;
+
 	public Expression expression;
 	public bool Top; // whether too bracket or bottom bracket
 
-	void Awake(){
-		left = (GameObject)Instantiate (Equations.BracketEnd);
-		left.transform.SetParent(Equations.Canvas.transform,false);
-		right = (GameObject)Instantiate (Equations.BracketEnd);
-		right.transform.SetParent (Equations.Canvas.transform,false);
+	void Start(){
+		left = (GameObject)Instantiate (equations.bracketEnd);
+		left.transform.SetParent(equations.transform,false);
+		right = (GameObject)Instantiate (equations.bracketEnd);
+		right.transform.SetParent (equations.transform,false);
 
-		transform.SetParent(Equations.Canvas.transform,false);
+		transform.SetParent(equations.transform,false);
 		transform.localRotation = new Quaternion ();
 		left.transform.localRotation = new Quaternion ();
 		right.transform.localRotation = new Quaternion ();
 
-		left.GetComponent<UnityEngine.UI.RawImage> ().color = Equations.DefaultTextColour;
-		right.GetComponent<UnityEngine.UI.RawImage> ().color = Equations.DefaultTextColour;
-		GetComponent<UnityEngine.UI.RawImage> ().color = Equations.DefaultTextColour;
+		left.GetComponent<UnityEngine.UI.RawImage> ().color = equations.defaultTextColour;
+		right.GetComponent<UnityEngine.UI.RawImage> ().color = equations.defaultTextColour;
+		GetComponent<UnityEngine.UI.RawImage> ().color = equations.defaultTextColour;
 
 	}
 
@@ -81,7 +83,9 @@ public class Bracket : MonoBehaviour {
 
 	public void BringToFront() {
 		transform.SetAsLastSibling ();
-		left.transform.SetAsLastSibling ();
-		right.transform.SetAsLastSibling ();
+		if (left != null && right != null) {
+			left.transform.SetAsLastSibling ();
+			right.transform.SetAsLastSibling ();
+		}
 	}
 }

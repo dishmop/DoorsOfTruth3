@@ -76,7 +76,8 @@ public class Product : Expression
 
 		if (NumTop == 0) {
 			// create a new one to go on top
-			One newone = Instantiate (Equations.OnePrefab).GetComponent <One> ();
+			One newone = Instantiate (equations.onePrefab).GetComponent <One> ();
+			newone.equations = equations;
 			newone.Parent = this;
 			newone.transform.SetParent (transform.parent,false);
 			Children.Insert (0, newone);
@@ -101,7 +102,8 @@ public class Product : Expression
 			Destroy (gameObject);
 		} else if (NumTop == 0) {
 			// create a new one to go on top
-			One newone = Instantiate (Equations.OnePrefab).GetComponent <One> ();
+			One newone = Instantiate (equations.onePrefab).GetComponent <One> ();
+			newone.equations = equations;
 			newone.Parent = this;
 			newone.transform.SetParent (transform.parent,false);
 			Children.Insert (0, newone);
@@ -202,7 +204,7 @@ public class Product : Expression
 
 	public override float Width {
 		get {
-			return Mathf.Max (WidthTop, WidthBottom) + ((ShowPositiveSign || !ExpressionSign) ? Equations.SignWidth : 0f);
+			return Mathf.Max (WidthTop, WidthBottom) + ((ShowPositiveSign || !ExpressionSign) ? equations.signWidth : 0f);
 		}
 	}
 
@@ -232,8 +234,8 @@ public class Product : Expression
 		}
 
 		if (ShowingSign) {
-			topstart += Equations.SignWidth;
-			bottomstart += Equations.SignWidth;
+			topstart += equations.signWidth;
+			bottomstart += equations.signWidth;
 		}
 
 		if (!expression.IsReciprocal) {
@@ -286,8 +288,9 @@ public class Product : Expression
 
 	protected override Expression ActualInstantiate ()
 	{
-		Expression ret = Instantiate (Equations.ProductPrefab).GetComponent<Expression> ();
-		ret.transform.SetParent (Equations.Canvas.transform,false);
+		Expression ret = Instantiate (equations.productPrefab).GetComponent<Expression> ();
+		ret.equations = equations;
+		ret.transform.SetParent (equations.transform,false);
 		return ret;
 
 	}

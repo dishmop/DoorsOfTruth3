@@ -14,6 +14,6 @@ public class Chalk : MonoBehaviour {
 		Vector3 worldPos;
 		RectTransformUtility.ScreenPointToWorldPointInRectangle ((RectTransform)transform.parent.GetComponentInChildren<Equations>().transform, Input.mousePosition, Camera.main, out worldPos);
 		transform.position = worldPos;
-		transform.position = transform.position + new Vector3 (-0.1f,-0.02f,-0.02f);
+		transform.position = transform.position + FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().transform.TransformDirection(new Vector3 (0.02f,-0.02f,-0.1f));
 	}
 }

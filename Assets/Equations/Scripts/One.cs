@@ -14,13 +14,15 @@ public class One : Expression
 	new public void LateUpdate ()
 	{
 		if (character == null) {
-			character = Instantiate (Equations.CharacterPrefab).GetComponent<Character> ();
+			character = Instantiate (equations.characterPrefab).GetComponent<Character> ();
+			character.equations = equations;
+
 			character.transform.SetParent (transform.parent,false);	
 			character.transform.position = transform.position;
 			character.character = "1";
 		}
 
-		character.transform.localPosition = new Vector3(Positionx,Positiony,0)+ new Vector3 ((ShowingSign ? Equations.SignWidth : 0),0,0);
+		character.transform.localPosition = new Vector3(Positionx,Positiony,0)+ new Vector3 ((ShowingSign ? equations.signWidth : 0),0,0);
 
 		base.LateUpdate ();
 	}
@@ -60,7 +62,7 @@ public class One : Expression
 
 	public override float Width {
 		get {
-			return ShowingSign ? 50f + Equations.SignWidth : 50f;
+			return ShowingSign ? 50f + equations.signWidth : 50f;
 		}
 	}
 
@@ -74,8 +76,9 @@ public class One : Expression
 
 	protected override Expression ActualInstantiate ()
 	{
-		Expression ret = Instantiate (Equations.OnePrefab).GetComponent<Expression> ();
-		ret.transform.SetParent (Equations.Canvas.transform,false);
+		Expression ret = Instantiate (equations.onePrefab).GetComponent<Expression> ();
+		ret.equations = equations;
+		ret.transform.SetParent (equations.transform,false);
 
 		return ret;
 	}

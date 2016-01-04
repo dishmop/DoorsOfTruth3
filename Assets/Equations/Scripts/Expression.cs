@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 abstract public class Expression : MonoBehaviour
 {
+	public Equations equations; // the main class for this blackboard (or whatever) instance
+
 	public Expression Parent;
 	public List<Expression> Children = new List<Expression> ();
 	public Expression imaginaryChild = null; // child that it would have if dropped
@@ -37,33 +39,37 @@ abstract public class Expression : MonoBehaviour
 	private float targety;
 	private bool targetsign = false; // whether would show positive sign as a child
 
-	// Use Start because Equations class does Awake first
+	// Use Start because equations class does Awake first
 	public void Start ()
 	{
 		// create UI elements we need
-		signComponent = Instantiate (Equations.CharacterPrefab).GetComponent<Character> ();
+		signComponent = Instantiate (equations.characterPrefab).GetComponent<Character> ();
+		signComponent.equations = equations;
 		signComponent.transform.SetParent (transform.parent,false);
 		signComponent.transform.position = transform.position;
 
-		reciprocalComponent = Instantiate (Equations.ReciprocalPrefab).GetComponent<Reciprocal> ();
+		reciprocalComponent = Instantiate (equations.reciprocalPrefab).GetComponent<Reciprocal> ();
+		reciprocalComponent.equations = equations;
 		reciprocalComponent.expression = this;
 		reciprocalComponent.transform.SetParent (transform.parent,false);
 		reciprocalComponent.transform.position = transform.position;
 
-		bracketComponentTop = Instantiate (Equations.BracketMiddle).GetComponent<Bracket> ();
+		bracketComponentTop = Instantiate (equations.bracketMiddle).GetComponent<Bracket> ();
+		bracketComponentTop.equations = equations;
 		bracketComponentTop.expression = this;
 		bracketComponentTop.Top = true;
 		bracketComponentTop.transform.SetParent (transform.parent,false);
 		bracketComponentTop.gameObject.SetActive (false);
 
-		bracketComponentBottom = Instantiate (Equations.BracketMiddle).GetComponent<Bracket> ();
+		bracketComponentBottom = Instantiate (equations.bracketMiddle).GetComponent<Bracket> ();
+		bracketComponentBottom.equations = equations;
 		bracketComponentBottom.expression = this;
 		bracketComponentBottom.Top = false;
 		bracketComponentBottom.transform.SetParent (transform.parent,false);
 		bracketComponentBottom.gameObject.SetActive (false);
 	}
 
-	// Use LateUpdate because Equations class does Update first
+	// Use LateUpdate because equations class does Update first
 	public void LateUpdate ()
 	{
 		signComponent.transform.localPosition = new Vector3 (Positionx - 10f, Positiony + Height / 2 - 25f, 0);
@@ -84,7 +90,7 @@ abstract public class Expression : MonoBehaviour
 				DragOver ();
 			} else {
 				DropOver ();
-				Equations.TopUndo.Capture ();
+				equations.topUndo.Capture ();
 				IsDraggingOver = false;
 			}
 		} else if (IsDraggingUnder) {
@@ -92,20 +98,20 @@ abstract public class Expression : MonoBehaviour
 				DragUnder ();
 			} else {
 				DropUnder ();
-				Equations.TopUndo.Capture ();
+				equations.topUndo.Capture ();
 				IsDraggingUnder = false;
 			}
 		} else {
 			// if we're clicking on the expression and nothing else is being dragged
-			if (ScreenRect.Contains (Equations.MousePos) && Input.GetMouseButton (0) && Parent != null && !Equations.Dragging) {
+			if (ScreenRect.Contains (equations.mousePos) && Input.GetMouseButton (0) && Parent != null && !equations.dragging) {
 
 				// if the cursor is moving up and we can add/subtract
-				if (Parent.CanDragOver (this) && Equations.MouseDelta.y > 0) {
+				if (Parent.CanDragOver (this) && equations.mouseDelta.y > 0) {
 					Parent.RemoveOver (this);
 					ShowPositiveSign = true;
 					IsDraggingOver = true;
 					PlusSide = ExpressionSign ^ (transform.localPosition.x < 0); // exclusive or
-					Equations.Dragging = true;
+					equations.dragging = true;
 					allowsideways = false;
 
 					targetx = Positionx;
@@ -114,11 +120,11 @@ abstract public class Expression : MonoBehaviour
 				} else
 
 				// if the cursor is moving down and we can divide/multiply
-				if (Parent.CanDragUnder (this) && Equations.MouseDelta.y < 0) {
+				if (Parent.CanDragUnder (this) && equations.mouseDelta.y < 0) {
 					Parent.RemoveUnder (this);
 					IsDraggingUnder = true;
 					ReciprocalSide = IsReciprocal ^ (transform.localPosition.x < 0); // exclusive or
-					Equations.Dragging = true;
+					equations.dragging = true;
 					allowsideways = false;
 
 					targetx = Positionx;
@@ -136,11 +142,11 @@ abstract public class Expression : MonoBehaviour
 
 		// reset dragging flag only when mouse is released, even if we have already dropped
 		if (!Input.GetMouseButton (0)) {
-			Equations.Dragging = false;
+			equations.dragging = false;
 		}
 
 		if (Parent != null) {
-			if (ScreenRect.Contains (Equations.MousePos)) {
+			if (ScreenRect.Contains (equations.mousePos)) {
 				if (Parent.CanDragOver (this)) {
 					bracketComponentBottom.gameObject.SetActive (true);
 				} else {
@@ -191,10 +197,10 @@ abstract public class Expression : MonoBehaviour
 
 	public void DropOver ()
 	{
-		Equations.ObscuringBox.SetActive (false);
+		equations.obscuringBox.SetActive (false);
 
 		//get rid of any old imaginary children
-		foreach (var expression in Equations.Canvas.GetComponentsInChildren<Expression>()) {
+		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
 			expression.imaginaryChild = null;
 		}
 
@@ -204,11 +210,11 @@ abstract public class Expression : MonoBehaviour
 
 		EquationSide side;
 
-		if (ScreenRect.xMin + Equations.SignWidth / 2 > 0) {
-			side = Equations.RHS;
+		if (ScreenRect.xMin + equations.signWidth / 2 > 0) {
+			side = equations.rhs;
 			ExpressionSign = PlusSide;
 		} else {
-			side = Equations.LHS;
+			side = equations.lhs;
 			ExpressionSign = !PlusSide;
 		}
 
@@ -232,7 +238,8 @@ abstract public class Expression : MonoBehaviour
 			Parent = side;
 		} else {
 			// must create a new sum
-			Sum newSum = Instantiate (Equations.SumPrefab).GetComponent<Sum> ();
+			Sum newSum = Instantiate (equations.sumPrefab).GetComponent<Sum> ();
+			newSum.equations= equations;
 			newSum.Parent = side;
 			newSum.transform.SetParent (transform.parent,false);
 
@@ -253,38 +260,41 @@ abstract public class Expression : MonoBehaviour
 	
 	public void DragOver ()
 	{
-		Equations.ObscuringBox.SetActive (true);
-		Equations.ObscuringBox.transform.SetAsLastSibling ();
-		((RectTransform)Equations.ObscuringBox.transform).sizeDelta = new Vector2 (ScreenRect.width, ScreenRect.height);
-		Equations.ObscuringBox.transform.localPosition = transform.localPosition;
+		equations.obscuringBox.SetActive (true);
+		equations.obscuringBox.transform.SetAsLastSibling ();
+		((RectTransform)equations.obscuringBox.transform).sizeDelta = new Vector2 (ScreenRect.width, ScreenRect.height);
+		equations.obscuringBox.transform.localPosition = transform.localPosition;
 		BringToFront ();
 
 		if (Positiony - targety > Height) {
 			allowsideways = true;
 		} else {
+			Vector3 newPosition = new Vector3 (targetx - (targetsign || !ExpressionSign ? 0 : equations.signWidth), transform.localPosition.y, 0);
+			float sidewaysmove = newPosition.x - transform.localPosition.x;
+			transform.localPosition = newPosition;
 			allowsideways = false;
-			transform.localPosition = new Vector3 (targetx - (targetsign || !ExpressionSign ? 0 : Equations.SignWidth), transform.localPosition.y, 0);
+			Move(new Vector3(-sidewaysmove,0,0)); // store the movement so we can snap back afterwards
 		}
 
-		float oldPos = ScreenRect.xMin + Equations.SignWidth / 2;
-		Move (Equations.MouseDelta);
-		float newPos = ScreenRect.xMin + Equations.SignWidth / 2;
+		float oldPos = ScreenRect.xMin + equations.signWidth / 2;
+		Move (equations.mouseDelta);
+		float newPos = ScreenRect.xMin + equations.signWidth / 2;
 
 		if (oldPos < 0 != newPos < 0) {
 			ExpressionSign = !ExpressionSign;
 		}
 
 		//get rid of any old imaginary children
-		foreach (var expression in Equations.Canvas.GetComponentsInChildren<Expression>()) {
+		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
 			expression.imaginaryChild = null;
 		}
 
 		EquationSide side;
 		
-		if (ScreenRect.xMin + Equations.SignWidth / 2 > 0) {
-			side = Equations.RHS;
+		if (ScreenRect.xMin + equations.signWidth / 2 > 0) {
+			side = equations.rhs;
 		} else {
-			side = Equations.LHS;
+			side = equations.lhs;
 		}
 		
 		if (side.Children [0].GetType () == typeof(Sum)) {
@@ -308,7 +318,8 @@ abstract public class Expression : MonoBehaviour
 			targetsign = false;
 		} else {
 			// must create a new sum
-			Sum newSum = Instantiate (Equations.SumPrefab).GetComponent<Sum> ();
+			Sum newSum = Instantiate (equations.sumPrefab).GetComponent<Sum> ();
+			newSum.equations = equations;
 			newSum.Parent = side;
 			newSum.transform.SetParent (transform.parent,false);
 			
@@ -339,31 +350,31 @@ abstract public class Expression : MonoBehaviour
 
 	public void DropUnder ()
 	{
-		Equations.ObscuringBox.SetActive (false);
+		equations.obscuringBox.SetActive (false);
 
 		cumulativesideways = 0;
 
 		
 		//get rid of any old imaginary children
-		foreach (var expression in Equations.Canvas.GetComponentsInChildren<Expression>()) {
+		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
 			expression.imaginaryChild = null;
 		}
 
 		EquationSide side;
 		
 		if (ScreenRect.center.x > 0) {
-			side = Equations.RHS;
+			side = equations.rhs;
 			IsReciprocal = ReciprocalSide;
 		} else {
-			side = Equations.LHS;
+			side = equations.lhs;
 			IsReciprocal = !ReciprocalSide;
 		}
 
-		if (IsReciprocal && Equations.ShowAssumptions) {
+		if (IsReciprocal && equations.showAssumptions) {
 			Expression assumpt = Create ();
-			assumpt.transform.localPosition = new Vector3 (0 + 20, 300 - Equations.NumAssumptions * 50, 0);
-			GameObject left = Instantiate (Equations.AssumptionLeft);
-			GameObject right = Instantiate (Equations.AssumptionRight);
+			assumpt.transform.localPosition = new Vector3 (0 + 20, 300 - equations.numAssumptions * 50, 0);
+			GameObject left = Instantiate (equations.assumptionLeft);
+			GameObject right = Instantiate (equations.assumptionRight);
 
 			left.transform.SetParent (transform.parent,false);
 			right.transform.SetParent (transform.parent,false);
@@ -373,16 +384,17 @@ abstract public class Expression : MonoBehaviour
 
 			assumpt.assumptionLeft = left;
 			assumpt.assumptionRight = right;
-			assumpt.assumptionStep = Equations.Step;
+			assumpt.assumptionStep = equations.step;
 
-			Equations.NumAssumptions++;
+			equations.numAssumptions++;
 		}
 
 		if (side.Children [0].GetType () == typeof(One)) {
 			if (IsReciprocal) {
 				// must create a new product
-				Product newProd = Instantiate (Equations.ProductPrefab).GetComponent<Product> ();
+				Product newProd = Instantiate (equations.productPrefab).GetComponent<Product> ();
 				newProd.Parent = side;
+				newProd.equations = equations;
 				newProd.transform.SetParent (transform.parent,false);
 					
 				newProd.Insert (0, side.Children [0]);
@@ -430,7 +442,8 @@ abstract public class Expression : MonoBehaviour
 
 			} else {
 				// must create a new sum
-				Product newProd = Instantiate (Equations.ProductPrefab).GetComponent<Product> ();
+				Product newProd = Instantiate (equations.productPrefab).GetComponent<Product> ();
+				newProd.equations = equations;
 				newProd.Parent = side;
 				newProd.transform.SetParent (transform.parent,false);
 
@@ -461,40 +474,44 @@ abstract public class Expression : MonoBehaviour
 			}
 		}
 
-		if ((Equations.LHS.Children [0].GetType () == typeof(One) && Equations.RHS.Children [0].GetType () == typeof(Zero)) || (Equations.RHS.Children [0].GetType () == typeof(One) && Equations.LHS.Children [0].GetType () == typeof(Zero))) {
-			Equations.HelpText.SetActive (true);
+		if ((equations.lhs.Children [0].GetType () == typeof(One) && equations.rhs.Children [0].GetType () == typeof(Zero)) || (equations.rhs.Children [0].GetType () == typeof(One) && equations.lhs.Children [0].GetType () == typeof(Zero))) {
+			equations.helpText.SetActive (true);
 		}
 	}
 
 	public void DragUnder ()
 	{
-		Equations.ObscuringBox.SetActive (true);
-		Equations.ObscuringBox.transform.SetAsLastSibling ();
-		((RectTransform)Equations.ObscuringBox.transform).sizeDelta = new Vector2 (ScreenRect.width, ScreenRect.height);
-		Equations.ObscuringBox.transform.localPosition = transform.localPosition;
+		equations.obscuringBox.SetActive (true);
+		equations.obscuringBox.transform.SetAsLastSibling ();
+		((RectTransform)equations.obscuringBox.transform).sizeDelta = new Vector2 (ScreenRect.width, ScreenRect.height);
+		equations.obscuringBox.transform.localPosition = transform.localPosition;
 		BringToFront ();
 
 		if (targety - Positiony > Height) {
 			allowsideways = true;
 		} else {
+			Vector3 newPosition = new Vector3 (targetx, transform.localPosition.y, 0);
+			float sidewaysmove = newPosition.x - transform.localPosition.x;
+			transform.localPosition = newPosition;
 			allowsideways = false;
-			transform.localPosition = new Vector3 (targetx, transform.localPosition.y, 0);
+			Move(new Vector3(-sidewaysmove,0,0)); // store the movement so we can snap back afterwards
+
 		}
 
-		Move (Equations.MouseDelta);
+		Move (equations.mouseDelta);
 
 		//get rid of any old imaginary children
-		foreach (var expression in Equations.Canvas.GetComponentsInChildren<Expression>()) {
+		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
 			expression.imaginaryChild = null;
 		}
 
 		EquationSide side;
 		
 		if (ScreenRect.center.x > 0) {
-			side = Equations.RHS;
+			side = equations.rhs;
 			IsReciprocal = ReciprocalSide;
 		} else {
-			side = Equations.LHS;
+			side = equations.lhs;
 			IsReciprocal = !ReciprocalSide;
 		}
 
@@ -527,8 +544,9 @@ abstract public class Expression : MonoBehaviour
 		} else if (side.Children [0].GetType () != typeof(One) && side.Children [0].GetType () != typeof(Zero)) {         // no movement in these cases
 
 			// must create a new sum
-			Product newProd = Instantiate (Equations.ProductPrefab).GetComponent<Product> ();
+			Product newProd = Instantiate (equations.productPrefab).GetComponent<Product> ();
 			newProd.Parent = side;
+			newProd.equations = equations;
 			newProd.transform.SetParent (transform.parent,false);
 			
 			if (side.Children [0].IsReciprocal == IsReciprocal) { // if both new and old elements are on same side of fraction
@@ -642,6 +660,7 @@ abstract public class Expression : MonoBehaviour
 	public Expression Store (Undo undo)
 	{
 		Expression ret = (Expression)undo.gameObject.AddComponent (GetType ());
+		ret.equations = equations;
 		ret.enabled = false;
 		
 		foreach (var child in Children) {
@@ -676,6 +695,7 @@ abstract public class Expression : MonoBehaviour
 
 		ret.ExpressionSign = ExpressionSign;
 		ret.IsReciprocal = IsReciprocal;
+		ret.equations = equations;
 
 		return ret;
 	}

@@ -8,10 +8,12 @@ public class Sum : Expression
 
 	new public void Start ()
 	{
-		leftBracket = Instantiate (Equations.CharacterPrefab).GetComponent<Character> ();
+		leftBracket = Instantiate (equations.characterPrefab).GetComponent<Character> ();
+		leftBracket.equations = equations;
 		leftBracket.transform.SetParent (transform.parent,false);	
 
-		rightBracket = Instantiate (Equations.CharacterPrefab).GetComponent<Character> ();
+		rightBracket = Instantiate (equations.characterPrefab).GetComponent<Character> ();
+		rightBracket.equations = equations;
 		rightBracket.transform.SetParent (transform.parent,false);	
 		
 		base.Start ();
@@ -42,7 +44,7 @@ public class Sum : Expression
 		if (!ShowingSign) {
 			leftBracket.transform.localPosition = new Vector3 (ScreenRect.xMin - 10f, ScreenRect.center.y - 25f, 0);
 		} else {
-			leftBracket.transform.localPosition = new Vector3 (ScreenRect.xMin - 10f + Equations.SignWidth, ScreenRect.center.y - 25f, 0);
+			leftBracket.transform.localPosition = new Vector3 (ScreenRect.xMin - 10f + equations.signWidth, ScreenRect.center.y - 25f, 0);
 
 		}
 		rightBracket.transform.localPosition = new Vector3 (ScreenRect.xMax - 40f, ScreenRect.center.y - 25f, 0);
@@ -141,7 +143,7 @@ public class Sum : Expression
 			return ChildPosx (imaginaryChild) + ImaginaryChildWidth ();
 		} else {
 			if (index == 0) {
-				return (ShowingSign ? Equations.SignWidth + Positionx : Positionx) + (showBrackets ? 20f : 0f);
+				return (ShowingSign ? equations.signWidth + Positionx : Positionx) + (showBrackets ? 20f : 0f);
 			} else {
 				return ChildPosx (Children [index - 1]) + Children [index - 1].Width;
 			}
@@ -201,8 +203,9 @@ public class Sum : Expression
 
 	protected override Expression ActualInstantiate ()
 	{
-		Expression ret = Instantiate (Equations.SumPrefab).GetComponent<Expression> ();
-		ret.transform.SetParent (Equations.Canvas.transform,false);
+		Expression ret = Instantiate (equations.sumPrefab).GetComponent<Expression> ();
+		ret.equations = equations;
+		ret.transform.SetParent (equations.transform,false);
 		return ret;
 
 	}
@@ -215,7 +218,7 @@ public class Sum : Expression
 		float imaginaryChildWith = imaginaryChild.Width;
 
 		if (imaginaryChild.ExpressionSign && imaginaryChildIndex == 0) {
-			imaginaryChildWith -= Equations.SignWidth;
+			imaginaryChildWith -= equations.signWidth;
 		}
 
 		float diff = imaginaryChild.Positiony - ChildPosy (imaginaryChild);

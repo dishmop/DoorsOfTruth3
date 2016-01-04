@@ -9,6 +9,8 @@ public class Undo : MonoBehaviour {
 	EquationSide LHS;
 	EquationSide RHS;
 
+	public Equations equations;
+
 	public void Update() {
 		if (next != null) {
 			next.prev = this;
@@ -17,7 +19,7 @@ public class Undo : MonoBehaviour {
 
 	public void Capture() { //saves current state
 
-		foreach(var expression in Equations.Canvas.GetComponentsInChildren<Expression>()){
+		foreach(var expression in equations.GetComponentsInChildren<Expression>()){
 			expression.Reduce();
 		}
 
@@ -44,10 +46,10 @@ public class Undo : MonoBehaviour {
 		}
 
 		// store current scene
-		LHS = (EquationSide)Equations.LHS.Store (this);
-		RHS = (EquationSide)Equations.RHS.Store (this);
-		Equations.Step++;
-		step = Equations.Step;
+		LHS = (EquationSide)equations.lhs.Store (this);
+		RHS = (EquationSide)equations.rhs.Store (this);
+		equations.step++;
+		step = equations.step;
 	}
 
 	public void Restore() {
@@ -55,8 +57,8 @@ public class Undo : MonoBehaviour {
 			return;
 
 		// clear scene
-		foreach (var expression in Equations.Canvas.GetComponentsInChildren<Expression>()) {
-			if(expression!=Equations.LHS && expression!=Equations.RHS && expression.GetComponent<Undo>()==null){
+		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
+			if(expression!=equations.lhs && expression!=equations.rhs && expression.GetComponent<Undo>()==null){
 				Expression topparent = expression;
 
 				while(topparent.Parent!=null) {
@@ -72,13 +74,13 @@ public class Undo : MonoBehaviour {
 
 
 		// copy all saved members to scene
-		Equations.LHS.Children [0] = LHS.Children [0].Create (); // recursively creates everything
-		Equations.LHS.Children [0].Parent = Equations.LHS;
+		equations.lhs.Children [0] = LHS.Children [0].Create (); // recursively creates everything
+		equations.lhs.Children [0].Parent = equations.lhs;
 
-		Equations.RHS.Children [0] = RHS.Children [0].Create ();
-		Equations.RHS.Children [0].Parent = Equations.RHS;
+		equations.rhs.Children [0] = RHS.Children [0].Create ();
+		equations.rhs.Children [0].Parent = equations.rhs;
 
-		Equations.Step = step;
+		equations.step = step;
 
 		
 		// now move state back
@@ -90,7 +92,7 @@ public class Undo : MonoBehaviour {
 		}
 
 		// change which is top undo
-		Equations.TopUndo = this;
+		equations.topUndo = this;
 
 		// clear the state
 		foreach(var expression in prev.GetComponents<Expression>()){

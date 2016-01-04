@@ -7,6 +7,8 @@ public class Eraser : MonoBehaviour {
 
 	public Equations equations;
 
+	public bool mouseOver = false;
+	
 	// Use this for initialization
 	void Start () {
 		startpos = transform.position;
@@ -34,11 +36,7 @@ public class Eraser : MonoBehaviour {
 		}
 
 	}
-
-
-	public bool mouseOver = false;
-	bool mouseOverOld = false;
-
+	
 	void OnMouseOver() {
 		// when mouse is over board rubber
 		mouseOver = true;

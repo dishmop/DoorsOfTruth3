@@ -28,7 +28,8 @@ public class EquationSide : Expression
 		Children.Remove (child);
 		child.Parent = null;
 
-		Zero newzero = Instantiate (Equations.ZeroPrefab).GetComponent <Zero> ();
+		Zero newzero = Instantiate (equations.zeroPrefab).GetComponent <Zero> ();
+		newzero.equations = equations;
 		newzero.Parent = this;
 		newzero.transform.SetParent (transform.parent,false);
 		Children.Add (newzero);
@@ -50,7 +51,8 @@ public class EquationSide : Expression
 		child.Parent = null;
 
 
-		One newone = Instantiate (Equations.OnePrefab).GetComponent <One> ();
+		One newone = Instantiate (equations.onePrefab).GetComponent <One> ();
+		newone.equations = equations;
 		newone.Parent = this;
 		newone.transform.SetParent (transform.parent,false);
 		Children.Add (newone);
@@ -62,9 +64,9 @@ public class EquationSide : Expression
 			return transform.localPosition.x;
 		}
 		if (LHS) {
-			return - Equations.SideOffset - expression.Width + ((expression.ShowPositiveSign && expression.ExpressionSign) ? Equations.SignWidth : 0);
+			return - equations.sideOffset - expression.Width + ((expression.ShowPositiveSign && expression.ExpressionSign) ? equations.signWidth : 0);
 		} else { // RHS																							 						 
-			return + Equations.SideOffset;
+			return + equations.sideOffset;
 		}
 	}
 
