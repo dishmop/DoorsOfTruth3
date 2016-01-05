@@ -14,6 +14,22 @@ public class BlackBoard : MonoBehaviour {
 	public string interactionText = "Press [E] for attention";
 
 	public bool interacting = false;
+
+	public AudioClip[] writingSounds;
+	public AudioClip[] erasingSounds;
+
+	public void PlayWritingSound(){
+		if (writingSounds.Length == 0)
+			return;
+		GetComponent<AudioSource> ().PlayOneShot (writingSounds [Random.Range (0, writingSounds.Length)]);
+	}
+
+	public void PlayErasingSound(){
+		if (erasingSounds.Length == 0)
+			return;
+
+		GetComponent<AudioSource> ().PlayOneShot (erasingSounds [Random.Range (0, erasingSounds.Length)]);
+	}
 	
 	bool IsLookingAt(){
 		return (LookAtAngle () < 40);

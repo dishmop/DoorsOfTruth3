@@ -138,7 +138,10 @@ public class Equations : MonoBehaviour
 
 	public void Undo ()
 	{
-		topUndo.next.Restore ();
+		if (topUndo.next.Restore ()) {
+			// play sound if we actually erased
+			transform.parent.GetComponent<BlackBoard>().PlayErasingSound();
+		}
 		helpText.SetActive (false);
 	}
 }
