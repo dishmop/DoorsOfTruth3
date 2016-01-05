@@ -52,9 +52,9 @@ public class Undo : MonoBehaviour {
 		step = equations.step;
 	}
 
-	public void Restore() {
+	public bool Restore() {
 		if (LHS == null)
-			return;
+			return false;
 
 		// clear scene
 		foreach (var expression in equations.GetComponentsInChildren<Expression>()) {
@@ -107,5 +107,7 @@ public class Undo : MonoBehaviour {
 		last.next = prev;
 
 		prev = null;
+
+		return true;
 	}
 }

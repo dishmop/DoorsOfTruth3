@@ -197,6 +197,8 @@ abstract public class Expression : MonoBehaviour
 
 	public void DropOver ()
 	{
+		transform.parent.parent.GetComponent<BlackBoard>().PlayWritingSound();
+
 		equations.obscuringBox.SetActive (false);
 
 		//get rid of any old imaginary children
@@ -350,8 +352,13 @@ abstract public class Expression : MonoBehaviour
 
 	public void DropUnder ()
 	{
+		// play a sound
+		transform.parent.parent.GetComponent<BlackBoard>().PlayWritingSound();
+
+		// hide the blakc box
 		equations.obscuringBox.SetActive (false);
 
+		// reset any unused sideways movement we've stored
 		cumulativesideways = 0;
 
 		
