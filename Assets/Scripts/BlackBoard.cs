@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Events;
 
 public class BlackBoard : MonoBehaviour {
 	public bool isInTrigger = false;
@@ -9,6 +9,9 @@ public class BlackBoard : MonoBehaviour {
 
 	public GameObject chalkGO;
 	public GameObject interactPosGO;
+    
+    public UnityEvent onRearrange;
+    public string rearrangeFor;
 
 	public bool isInteractable;
 	public string interactionText = "Press [E] for attention";
@@ -89,6 +92,22 @@ public class BlackBoard : MonoBehaviour {
 				level.y = colliderGO.transform.position.y;
 				colliderGO.transform.LookAt(level);
 			}
+            
+            if(rearrangeFor!=null){
+                if(GetComponentInChildren<Equations>().ArrangedFor == rearrangeFor) {
+                    onRearrange.Invoke();
+                    isInteractable = false;
+                    interacting = false;
+                    
+                    Cursor.lockState = interacting?CursorLockMode.None:CursorLockMode.Locked;
+
+					var controller = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>();
+					controller.lockRotation = interacting;
+					controller.lockPosition = interacting;
+
+					chalkGO.SetActive(interacting);
+                }
+            }
 
 		} else {
 			interactionText = "Press [E] to use";
@@ -123,13 +142,13 @@ public class BlackBoard : MonoBehaviour {
 					var controller = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>();
 					interacting = !interacting;
 					//Cursor.visible = interacting;
+
 					Cursor.lockState = interacting?CursorLockMode.None:CursorLockMode.Locked;
 
 					controller.lockRotation = interacting;
 					controller.lockPosition = interacting;
 
 					chalkGO.SetActive(interacting);
-
 				}
 			}
 			else{

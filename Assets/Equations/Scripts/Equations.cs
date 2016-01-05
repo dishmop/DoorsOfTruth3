@@ -13,48 +13,6 @@ using UnityEngine;
 
 public class Equations : MonoBehaviour
 {
-
-//	// our actual globals - static members cannot be assigned in editor
-//
-//	// things to be linked
-//	public static EquationSide LHS;
-//	public static EquationSide RHS;
-//	public static Undo TopUndo;
-//	public static GameObject HelpText;
-//	public static GameObject ObscuringBox;
-//
-//	// prefabs
-//	public static GameObject CharacterPrefab;
-//	public static GameObject ReciprocalPrefab;
-//	public static GameObject ProductPrefab;
-//	public static GameObject SumPrefab;
-//	public static GameObject OnePrefab;
-//	public static GameObject ZeroPrefab;
-//	public static GameObject VariablePrefab;
-//	public static GameObject AssumptionRight;
-//	public static GameObject AssumptionLeft;
-//	public static GameObject BracketMiddle;
-//	public static GameObject BracketEnd;
-//
-//	// constants
-//	public static readonly float SignWidth = 35f; // width allowed for + and - symbol
-//	public static readonly float SideOffset = 40f; // distance of equation sides from centre
-//	public static readonly bool ShowAssumptions = false; // whether to display list of assumptions
-//
-//
-//	// global variables
-//	public static int NumAssumptions = 0;
-//	public static int Step = 0;
-//	public static Vector3 MouseDelta;
-//	public static Vector3 OldMousePos = new Vector3 ();
-//	public static Vector3 MousePos = new Vector3 ();
-//	public static bool Dragging = false;
-//	public static Color DefaultTextColour;
-//
-//	// singleton
-//	public static GameObject Canvas = null;
-
-
 	// things to be assigned in the editor
 	public GameObject characterPrefab;
 	public GameObject reciprocalPrefab;
