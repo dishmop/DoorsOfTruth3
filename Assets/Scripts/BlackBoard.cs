@@ -112,6 +112,8 @@ public class BlackBoard : MonoBehaviour {
 		} else {
 			interactionText = "Press [E] to use";
 		}
+        
+        GetComponentInChildren<Equations>().isInteractable = interacting;
 
 		if (isInTrigger){
 			canInteract = IsLookingAt();

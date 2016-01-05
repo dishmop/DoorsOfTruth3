@@ -103,7 +103,7 @@ abstract public class Expression : MonoBehaviour
 			}
 		} else {
 			// if we're clicking on the expression and nothing else is being dragged
-			if (ScreenRect.Contains (equations.mousePos) && Input.GetMouseButton (0) && Parent != null && !equations.dragging) {
+			if (ScreenRect.Contains (equations.mousePos) && Input.GetMouseButton (0) && Parent != null && !equations.dragging && equations.isInteractable) {
 
 				// if the cursor is moving up and we can add/subtract
 				if (Parent.CanDragOver (this) && equations.mouseDelta.y > 0) {
@@ -145,7 +145,7 @@ abstract public class Expression : MonoBehaviour
 			equations.dragging = false;
 		}
 
-		if (Parent != null) {
+		if (Parent != null && equations.isInteractable) {
 			if (ScreenRect.Contains (equations.mousePos)) {
 				if (Parent.CanDragOver (this)) {
 					bracketComponentBottom.gameObject.SetActive (true);

@@ -40,6 +40,7 @@ public class Equations : MonoBehaviour
 	public Vector3 mousePos = new Vector3 ();
 	public bool dragging = false;
 	public Color defaultTextColour;
+    public bool isInteractable = true;
 
 	// constants
 	public readonly float signWidth = 35f; // width allowed for + and - symbol
